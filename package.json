@@ -1,0 +1,17 @@
+{
+  "name": "91-crawler",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "airycanon@airycanon.me",
+  "license": "MIT",
+  "dependencies": {
+    "bee-queue": "^1.2.2",
+    "log4js": "^2.5.3",
+    "puppeteer": "^1.1.1"
+  },
+  "devDependencies": {}
+}
