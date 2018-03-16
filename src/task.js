@@ -11,7 +11,8 @@ class Task {
     async run() {
         let {images, title} = await this.parse();
         if (images.length > common.config.count) {
-            let path = crypto.createHash('md5').update(title).digest("hex");
+            const md5 = crypto.createHash('md5').update(title).digest("hex");
+            const path = common.config.path + '/' + md5;
 
             if (!fs.existsSync(path)) {
                 fs.mkdirSync(path);
@@ -49,4 +50,4 @@ class Task {
     }
 }
 
-module.exports =  Task;
+module.exports = Task;
