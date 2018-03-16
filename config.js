@@ -4,5 +4,6 @@ module.exports = {
     count: 7,
     redis: '127.0.0.1',
     path: './images',
-    timeout: 10000
+    timeout: 10000,
+    worker:1
 }
