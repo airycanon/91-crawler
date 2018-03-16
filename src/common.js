@@ -46,7 +46,7 @@ class Common {
         this.queue = new Queue('posts', {
             prefix: 'spider-queue',
             redis: {
-                host: 'redis',
+                host: config.redis,
                 port: 6379,
                 db: 0,
                 options: {}
