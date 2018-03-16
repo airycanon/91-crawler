@@ -33,7 +33,7 @@ class App {
 
         next && setTimeout(async () => {
             await this.createJobs(next)
-        }, common.config.timedout);
+        }, common.config.timeout);
 
         return Promise.resolve();
     }
