@@ -14,7 +14,7 @@ class App {
             for (let i = 0; i < common.config.worker; i++) {
                 cluster.fork({i});
             }
-            await this.createJobs(27);
+            await this.createJobs(1);
         } else {
             common.queue.process(async (job) => {
                 let task = await new Task(job.data.url);
