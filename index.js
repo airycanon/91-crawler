@@ -14,10 +14,11 @@ class App {
             for (let i = 0; i < common.config.worker; i++) {
                 cluster.fork({i});
             }
-            await this.createJobs(1);
+            let pageCount = await Site.getPageCount();
+            await this.createJobs(pageCount);
         } else {
             common.queue.process(async (job) => {
-                let task = await new Task(job.data.url);
+                let task = new Task(job.data);
                 return await task.run();
             });
         }
@@ -25,12 +26,20 @@ class App {
 
     async createJobs(page) {
         console.log(`开始获取第 ${page} 页`);
-        let {posts, next} = await Site.getPosts(page);
-        posts.length && console.log(`共 ${posts.length} 条`);
-        for (let url of posts) {
-            common.queue.createJob({url}).save();
+        let posts = await Site.getPosts(page);
+
+        while (posts.length) {
+            let post = posts.pop();
+            let job = common.queue.createJob(post);
+            job.save();
+            job.on('succeeded', (result) => {
+                if (result) {
+                    console.log(`已保存${result} 张图片`);
+                }
+            });
         }
 
+        const next = page - 1;
         next && setTimeout(async () => {
             await this.createJobs(next)
         }, common.config.timeout);

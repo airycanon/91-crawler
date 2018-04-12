@@ -1,9 +1,9 @@
 module.exports = {
     proxy: "socks5://127.0.0.1:1080",
-    like: 21,
+    like: 3,
     count: 7,
-    redis: '127.0.0.1',
+    redis: 'redis',
     path: './images',
-    timeout: 10000,
-    worker:1
+    timeout: 5000,
+    worker: 1
 }

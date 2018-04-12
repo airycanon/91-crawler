@@ -3,6 +3,8 @@
 const config = require('../config');
 const puppeteer = require('puppeteer');
 const Queue = require('bee-queue');
+const fs = require('fs');
+const cheerio = require('cheerio');
 
 process.setMaxListeners(Infinity);
 
@@ -16,9 +18,12 @@ class Common {
         config.proxy && args.push('--proxy-server=' + config.proxy);
 
         this.browser = await puppeteer.launch({
-            args: args
+            args: args,
+            headless: true
         });
 
+        this.fs = fs;
+        this.cheerio = cheerio;
         this.config = config;
 
         this.profile = {
@@ -36,10 +41,12 @@ class Common {
 
         this.selector = {
             url: '#navcontainer ul > li:nth-child(4) > a',
-            posts: "tbody[id*='normalthread']",
-            postUrl: "span[id*='thread'] a",
-            postLikeCount: "font[color='green']",
-            postTitle: 'h1',
+            lastPost: '.pages a.last',
+            posts: 'tbody[id*=normalthread]',
+            postTitle: 'span[id*=thread]',
+            postUrl: 'span[id*=thread] a',
+            postLikeCount: 'font[color=green]',
+            postDate: '.author em',
             postImages: 'img[file]'
         };
 
@@ -54,8 +61,7 @@ class Common {
         });
 
         const page = await this.getPage();
-        await page.goto('http://91porn.com/index.php', {waitUntil: 'domcontentloaded'});
-
+        await page.goto('http://91porn.com/index.php', {waitUntil: 'networkidle0'});
         this.url = await page.$eval(this.selector.url, element => element.href);
     }
 

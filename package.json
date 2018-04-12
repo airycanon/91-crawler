@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "bee-queue": "^1.2.2",
+    "cheerio": "^1.0.0-rc.2",
     "log4js": "^2.5.3",
     "puppeteer": "^1.1.1"
   },
