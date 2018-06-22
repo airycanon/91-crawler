@@ -14,8 +14,8 @@ class App {
             for (let i = 0; i < common.config.worker; i++) {
                 cluster.fork({i});
             }
-            let pageCount = await Site.getPageCount();
-            await this.createJobs(pageCount);
+            let page = process.argv.length > 2 ? parseInt(process.argv[2]) : await Site.getPageCount();
+            await this.createJobs(page);
         } else {
             common.queue.process(async (job) => {
                 let task = new Task(job.data);
