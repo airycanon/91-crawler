@@ -1,4 +1,5 @@
 const common = require('./common')
+const format = require('date-fns/format')
 
 class Post {
     constructor(html) {
@@ -16,7 +17,8 @@ class Post {
             this.like = matches.length ? matches[0] : 0;
         }
 
-        this.date = $('.author em').text();
+        let date = $('.author em').text();
+        this.date = format(date,'YYYY-MM-DD');
     }
 }
 
