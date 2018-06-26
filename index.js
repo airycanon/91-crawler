@@ -25,18 +25,13 @@ class App {
     }
 
     async createJobs(page) {
-        console.log(`开始获取第 ${page} 页`);
+        console.log(`开始获取第 ${page} 页帖子`);
         let posts = await Site.getPosts(page);
 
         while (posts.length) {
             let post = posts.pop();
             let job = common.queue.createJob(post);
             job.save();
-            job.on('succeeded', (result) => {
-                if (result) {
-                    console.log(`已保存${result} 张图片`);
-                }
-            });
         }
 
         const next = page - 1;
@@ -49,7 +44,14 @@ class App {
 }
 
 (async function () {
-    await new App().run();
+    try {
+        await new App().run();
+    } catch (e) {
+        console.log(e);
+        common.browser.close();
+    } finally {
+        common.browser.close();
+    }
 })();
 
 

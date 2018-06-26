@@ -9,8 +9,10 @@ class Task {
     }
 
     async run() {
+        let saved = 0;
         let images = await this.parse();
         if (images.length > common.config.count) {
+            console.log(`开始保存图片，共${images.length}张`);
             let path = common.config.path + '/' + this.post.date;
             if (!common.fs.existsSync(path)) {
                 common.fs.mkdirSync(path);
@@ -22,28 +24,36 @@ class Task {
             }
 
             for (let [index, image] of images.entries()) {
-                let page = await common.getPage();
-                let response = await page.goto(image);
-                let buffer = await response.buffer();
-                common.fs.writeFileSync(path + '/' + index + '.jpg', buffer);
+                try {
+                    let page = await common.getPage();
+                    let response = await page.goto(image, {timeout: common.config.timeout});
+                    let buffer = await response.buffer();
+                    common.fs.writeFileSync(path + '/' + index + '.jpg', buffer);
+                    saved++;
+                } catch (e) {
+                    console.log(e);
+                }
             }
-
-            return images.length;
+            if (saved) {
+                console.log(`图片保存完成，共${saved}张`);
+            }
         }
 
-        return 0;
+        return saved;
     }
 
     async parse() {
         let page = await common.getPage();
-        await page.goto(this.post.url);
-        await page.waitFor(1000);
-        let selector = common.selector.postImages;
-        let images = await page.evaluate((selector) => {
-            return Object.values(document.querySelectorAll(selector)).map(image => image.src);
-        }, selector);
-
-        console.log('共' + images.length + '图片');
+        let images = [];
+        try {
+            await page.goto(this.post.url);
+            let selector = common.selector.postImages;
+            images = await page.evaluate((selector) => {
+                return Object.values(document.querySelectorAll(selector)).map(image => image.src);
+            }, selector);
+        } catch (e) {
+            console.log(e);
+        }
 
         return images;
     }
