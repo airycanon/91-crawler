@@ -37,7 +37,7 @@ class App {
         const next = page - 1;
         next && setTimeout(async () => {
             await this.createJobs(next)
-        }, common.config.timeout);
+        }, common.config.sleep);
 
         return Promise.resolve();
     }
