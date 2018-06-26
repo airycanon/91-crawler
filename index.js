@@ -49,8 +49,6 @@ class App {
     } catch (e) {
         console.log(e);
         common.browser.close();
-    } finally {
-        common.browser.close();
     }
 })();
 
